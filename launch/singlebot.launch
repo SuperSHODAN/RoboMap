@@ -1,0 +1,38 @@
+<launch>
+ <env name="GAZEBO_MODEL_PATH" value="$(find irobotcreate)/models/"/>
+ <param name="robot_description" textfile="$(find irobotcreate)/models/irobot/model_full.urdf"/>
+
+ <!-- load an empty gazebo world with standard physics -->
+ <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find irobotcreate)/worlds/empty2.world"/>
+ </include>
+
+ <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-file $(find irobotcreate)/models/irobot/model_full.sdf -sdf -model iRobotCreate"/>
+ <node name ="tf_broadcast" pkg="irobotcreate" type="tf_broadcast"/>
+
+ <!--<node pkg="robotics_class" type="seek_node" name="seek_node"/>-->
+ <!--<node pkg="robotics_class" type="detect_node" name="detect_node"/>-->
+ <node pkg="robotics_class" type="arbiter_node" name="arbiter_node"/>
+
+ <node pkg="irobotcreate" type="gps_to_zero_translate" name="gps_to_zero_translate"/>
+
+
+ <!-- EKF for absolute localization (clearpath) -->
+ <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
+     <param name="base_footprint_frame" value="base_link"/>
+     <remap from="odom" to="irobot/odom"/>
+     <remap from="imu_data" to="irobot/imu_data"/>
+     <remap from="gps" to="irobot/gps_odom"/>
+     <param name="output_frame" value="odom"/>
+     <param name="freq" value="10.0"/>
+     <param name="sensor_timeout" value="1.0"/>
+     <param name="odom_used" value="true"/>
+     <param name="imu_used" value="true"/>
+     <param name="imu_absolute" value="true"/>
+     <param name="vo_used" value="false"/>
+     <param name="gps_used" value="true"/>
+     <param name="debug" value="false"/>
+     <param name="self_diagnose" value="false"/>
+
+ </node>
+</launch>
