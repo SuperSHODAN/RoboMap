@@ -10,7 +10,7 @@
 #define PRIORITY_DETECT 1
 
 void callback_seek(const robotics_class::behavior::ConstPtr& msg);
-void callback_avoid(const robotics_class::behavior::ConstPtr& msg);
+void callback_detect(const robotics_class::behavior::ConstPtr& msg);
 geometry_msgs::Twist msg_move;
 robotics_class::behavior msg_bh;
 ros::Publisher pub_vel;
