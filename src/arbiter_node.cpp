@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "robotics_class/behavior.h"
+#include "RoboMap/behavior.h"
 #include <functional>
 #include <queue>
 #include <vector>
@@ -9,25 +9,25 @@
 #define PRIORITY_SEEK 0
 #define PRIORITY_DETECT 1
 
-void callback_seek(const robotics_class::behavior::ConstPtr& msg);
-void callback_detect(const robotics_class::behavior::ConstPtr& msg);
+void callback_seek(const RoboMap::behavior::ConstPtr& msg);
+void callback_detect(const RoboMap::behavior::ConstPtr& msg);
 geometry_msgs::Twist msg_move;
-robotics_class::behavior msg_bh;
+RoboMap::behavior msg_bh;
 ros::Publisher pub_vel;
 
 //define comparison operator here
-bool compare_priorities(std::pair<int, robotics_class::behavior> a,
-             std::pair<int, robotics_class::behavior> b) {
+bool compare_priorities(std::pair<int, RoboMap::behavior> a,
+             std::pair<int, RoboMap::behavior> b) {
     return a.first < b.first;
 }
 
 //create priority queue
-std::priority_queue< std::pair<int, robotics_class::behavior>,
-            std::vector<std::pair<int, robotics_class::behavior> >,
+std::priority_queue< std::pair<int, RoboMap::behavior>,
+            std::vector<std::pair<int, RoboMap::behavior> >,
             decltype(&compare_priorities)> behavior_queue{compare_priorities};
 
 //translate behavior message to twist
-void move_robot(robotics_class::behavior& msg) {
+void move_robot(RoboMap::behavior& msg) {
     geometry_msgs::Twist msg_move;
     msg_move.linear.x = msg.vel_fw;
     msg_move.angular.z = msg.vel_turn;
@@ -44,7 +44,7 @@ void stop_robot() {
 //process all behavior messages
 void process_behaviors() {
     if (!behavior_queue.empty()) {
-        robotics_class::behavior priority_msg = behavior_queue.top().second;
+        RoboMap::behavior priority_msg = behavior_queue.top().second;
         move_robot(priority_msg);
         while(behavior_queue.size() > 0) {
             //C++ Priority Queue has no clear function,
@@ -82,16 +82,16 @@ int main(int argc, char** argv) {
 }
 
 //callbacks for behaviors
-void callback_seek (const robotics_class::behavior::ConstPtr& msg) {
+void callback_seek (const RoboMap::behavior::ConstPtr& msg) {
 	if (msg->active) {
-        behavior_queue.push(std::pair<int, robotics_class::behavior>(PRIORITY_SEEK, *msg));
+        behavior_queue.push(std::pair<int, RoboMap::behavior>(PRIORITY_SEEK, *msg));
     }
     ROS_INFO("Arbiter: Seek(%s) Fw: %.1f Turn: %.1f", msg->active ? "on" : "off", msg->vel_fw, msg->vel_turn);
 }
 
-void callback_detect (const robotics_class::behavior::ConstPtr& msg) {
+void callback_detect (const RoboMap::behavior::ConstPtr& msg) {
 	if (msg->active) {
-        behavior_queue.push(std::pair<int, robotics_class::behavior>(PRIORITY_DETECT, *msg));
+        behavior_queue.push(std::pair<int, RoboMap::behavior>(PRIORITY_DETECT, *msg));
     }
     ROS_INFO("Arbiter: Detect(%s) Fw: %.1f Turn: %.1f", msg->active ? "on" : "off", msg->vel_fw, msg->vel_turn);
 }

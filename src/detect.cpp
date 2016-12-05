@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "class_excercises/behavior.h"
+#include "RoboMap/behavior.h"
 #include "sensor_msgs/LaserScan.h"
 #include <math.h>
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
@@ -11,7 +11,7 @@ class Detect{
 	ros::Subscriber sub_right_scan;
 	ros::Subscriber sub_ekf;
 	ros::Publisher pub_detect;
-	class_excercises::behavior msg_bh;
+	RoboMap::behavior msg_bh;
 
 
 
@@ -24,7 +24,7 @@ class Detect{
 	geometry_msgs::Point target_location;
 
 	Detect(){ 
-		this->pub_detect = nh.advertise<class_excercises::behavior>("behavior/detect", 1);
+		this->pub_detect = nh.advertise<RoboMap::behavior>("behavior/detect", 1);
 		this->sub_left_scan = nh.subscribe("irobot/left_distance_scan", 1, &Detect::callback_left_distance_scan, this);
 		this->sub_right_scan = nh.subscribe("irobot/right_distance_scan", 1, &Detect::callback_right_distance_scan, this);
         this->sub_ekf = nh.subscribe("robot_pose_ekf/odom_combined", 1, &Detect::cb_ekf, this);

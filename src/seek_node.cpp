@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include "tf/tf.h"
-#include "robotics_class/behavior.h"
+#include "RoboMap/behavior.h"
 #include <cmath>
 #include <queue>
 #include <deque>
@@ -13,7 +13,7 @@ void FixVel();
 void FindFix();
 void FindTarget();
 
-robotics_class::behavior msg;
+RoboMap::behavior msg;
 double yaw_angle;
 double target_angle;
 
@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 
 	ros::Subscriber sub_l = nh.subscribe("robot_pose_ekf/odom_combined", 1, callback);
 
-    ros::Publisher pub_arbiter = nh.advertise<robotics_class::behavior>("/behavior/seek", 1);
+    ros::Publisher pub_arbiter = nh.advertise<RoboMap::behavior>("/behavior/seek", 1);
 
     /*ros::ServiceClient client = nh.serviceClient<class_exercises::DistanceTo>("distance_to");
     class_exercises::DistanceTo srv;*/
