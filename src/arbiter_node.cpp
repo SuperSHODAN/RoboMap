@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 	ros::Subscriber sub_seek = nh.subscribe("behavior/seek", 1, callback_seek);
 	/*ros::Subscriber sub_avoid = nh.subscribe("behavior/detect", 1, callback_detect);*/
 
-	pub_vel = nh.advertise<geometry_msgs::Twist>("/irobot/cmd_vel", 1);
+	pub_vel = nh.advertise<geometry_msgs::Twist>("irobot/cmd_vel", 1);
 
 
 
