@@ -61,6 +61,7 @@ int main(int argc, char** argv) {
     client = nh.serviceClient<RoboMap::mapData>("mapData");
 
     FindTarget();
+    ROS_INFO("Starting map received.");
 
     for(int i = 0; i < 9; i++) {
     	old_error_vel.push_front(0.0);

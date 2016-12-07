@@ -7,10 +7,10 @@
 
 //define priority of behaviors here
 #define PRIORITY_SEEK 0
-#define PRIORITY_DETECT 1
+/*#define PRIORITY_DETECT 1*/
 
 void callback_seek(const RoboMap::behavior::ConstPtr& msg);
-void callback_detect(const RoboMap::behavior::ConstPtr& msg);
+/*void callback_detect(const RoboMap::behavior::ConstPtr& msg);*/
 geometry_msgs::Twist msg_move;
 RoboMap::behavior msg_bh;
 ros::Publisher pub_vel;
@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
 	ros::Rate loop_rate(30);
 
 	ros::Subscriber sub_seek = nh.subscribe("behavior/seek", 1, callback_seek);
-	ros::Subscriber sub_avoid = nh.subscribe("behavior/detect", 1, callback_detect);
+	/*ros::Subscriber sub_avoid = nh.subscribe("behavior/detect", 1, callback_detect);*/
 
 	pub_vel = nh.advertise<geometry_msgs::Twist>("/irobot/cmd_vel", 1);
 
@@ -89,9 +89,9 @@ void callback_seek (const RoboMap::behavior::ConstPtr& msg) {
     ROS_INFO("Arbiter: Seek(%s) Fw: %.1f Turn: %.1f", msg->active ? "on" : "off", msg->vel_fw, msg->vel_turn);
 }
 
-void callback_detect (const RoboMap::behavior::ConstPtr& msg) {
+/*void callback_detect (const RoboMap::behavior::ConstPtr& msg) {
 	if (msg->active) {
         behavior_queue.push(std::pair<int, RoboMap::behavior>(PRIORITY_DETECT, *msg));
     }
     ROS_INFO("Arbiter: Detect(%s) Fw: %.1f Turn: %.1f", msg->active ? "on" : "off", msg->vel_fw, msg->vel_turn);
-}
+}*/

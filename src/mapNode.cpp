@@ -217,6 +217,7 @@ int main(int argc, char** argv) {
 bool sendMapData(RoboMap::mapData::Request& request,
 				 RoboMap::mapData::Response& response)
 {
+	ROS_INFO("responding tpo sendData call");
 	response.intensity = {1, 2, 3, 4, 5, 6, 7};
 	response.latitude  = 99.0f;
 	response.longitude = 33.0f;

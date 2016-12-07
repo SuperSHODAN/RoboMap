@@ -10,9 +10,11 @@
  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-file $(find irobotcreate)/models/irobot/model_full.sdf -sdf -model iRobotCreate"/>
  <node name ="tf_broadcast" pkg="irobotcreate" type="tf_broadcast"/>
 
- <!--<node pkg="robotics_class" type="seek_node" name="seek_node"/>-->
- <!--<node pkg="robotics_class" type="detect_node" name="detect_node"/>-->
- <node pkg="robotics_class" type="arbiter_node" name="arbiter_node"/>
+
+ <node pkg="RoboMap" type="mapNode" name="mapNode"/>
+ <!--<node pkg="RoboMap" type="seek_node" name="seek_node"/>-->
+ <node pkg="RoboMap" type="detect" name="detect"/>
+ <node pkg="RoboMap" type="arbiter_node" name="arbiter_node"/>
 
  <node pkg="irobotcreate" type="gps_to_zero_translate" name="gps_to_zero_translate"/>
 

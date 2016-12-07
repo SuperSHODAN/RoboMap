@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "RoboMap/report.h"
+#include "RoboMap/mapPoint.h"
 #include "sensor_msgs/LaserScan.h"
 #include <math.h>
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
@@ -11,7 +11,7 @@ class Detect{
 	ros::Subscriber sub_right_scan;
 	ros::Subscriber sub_ekf;
 	ros::Publisher pub_detect;
-	RoboMap::report msg_bh;
+	RoboMap::mapPoint msg_bh;
 
 
 
@@ -24,7 +24,7 @@ class Detect{
 	geometry_msgs::Point target_location;
 
 	Detect(){ 
-		this->pub_detect = nh.advertise<RoboMap::report>("robomap/detect", 1);
+		this->pub_detect = nh.advertise<RoboMap::mapPoint>("mapPoint", 1);
 		this->sub_left_scan = nh.subscribe("irobot/left_distance_scan", 1, &Detect::callback_left_distance_scan, this);
 		this->sub_right_scan = nh.subscribe("irobot/right_distance_scan", 1, &Detect::callback_right_distance_scan, this);
         this->sub_ekf = nh.subscribe("robot_pose_ekf/odom_combined", 1, &Detect::cb_ekf, this);
@@ -109,8 +109,8 @@ void Detect::triangulate(double distance, bool left){
 	ROS_INFO("Target location x: %f, y: %f", target_location.x, target_location.y);
 	ROS_INFO("Current location x: %f, y: %f", current_location.x, current_location.y);
 
-	msg_bh.target_x = target_location.x;
-	msg_bh.target_y = target_location.y;
+	msg_bh.latitude = target_location.x;
+	msg_bh.longitude = target_location.y;
 
 	pub_detect.publish(msg_bh);
 }
