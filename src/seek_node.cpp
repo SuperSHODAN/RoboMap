@@ -2,6 +2,7 @@
 #include "geometry_msgs/PoseWithCovarianceStamped.h"
 #include "tf/tf.h"
 #include "RoboMap/behavior.h"
+#include "RoboMap/mapData.h"
 #include <cmath>
 #include <queue>
 #include <deque>
@@ -43,6 +44,9 @@ double baseY = -1.0;
 geometry_msgs::Point current;
 geometry_msgs::Point target;
 
+ros::ServiceClient client;
+RoboMap::mapData srv;
+
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "seek_node");
 	ros::NodeHandle nh;
@@ -54,8 +58,7 @@ int main(int argc, char** argv) {
 
     ros::Publisher pub_arbiter = nh.advertise<RoboMap::behavior>("/behavior/seek", 1);
 
-    ros::ServiceClient client = nh.serviceClient<RoboMap::mapData>("mapData");
-    RoboMap::mapData srv;
+    client = nh.serviceClient<RoboMap::mapData>("mapData");
 
     FindTarget();
 

@@ -50,6 +50,7 @@ add_message_files(
    FILES
    behavior.msg
    report.msg
+   mapPoint.msg
  )
 
 ## Generate services in the 'srv' folder
