@@ -60,8 +60,9 @@ int main(int argc, char** argv) {
 
     client = nh.serviceClient<RoboMap::mapData>("mapData");
 
-    FindTarget();
-    ROS_INFO("Starting map received.");
+    current.x = 0.0;
+	current.y = 0.0;
+	current.z = 0.0;
 
     for(int i = 0; i < 9; i++) {
     	old_error_vel.push_front(0.0);
@@ -69,6 +70,7 @@ int main(int argc, char** argv) {
 
 	while(ros::ok()) {
 
+		FindTarget();
 		FindFix();
 
 		pub_arbiter.publish(msg);
@@ -153,11 +155,11 @@ void FindTarget () {
 		}
 	}
 
-	target.x = baseX + largestX;
-	target.y = baseY + largestY;
+	target.x = baseX + largestX + 0.5;
+	target.y = baseY + largestY + 0.5;
 
-	ROS_INFO("largestX: %i", largestX);
-	ROS_INFO("largestY: %i", largestY);
+	/*ROS_INFO("largestX: %i", largestX);
+	ROS_INFO("largestY: %i", largestY);*/
 
 }
 
@@ -173,7 +175,6 @@ void FindFix () {
 		msg.vel_fw = 0;
 		msg.vel_turn = 0;
 		msg.active = true;
-		FindTarget();
 	}
 
 	/*ROS_INFO("msg: ");

@@ -195,11 +195,17 @@ include_directories(./include/RoboMap)
 add_executable(arbiter_node src/arbiter_node.cpp)
 target_link_libraries(arbiter_node ${catkin_LIBRARIES})
 
-add_executable(seek_node src/seek_node.cpp)
-target_link_libraries(seek_node ${catkin_LIBRARIES})
+#add_executable(seek_node src/seek_node.cpp)
+#target_link_libraries(seek_node ${catkin_LIBRARIES})
 
-add_executable(mapNode src/mapNode.cpp)
-target_link_libraries(mapNode ${catkin_LIBRARIES})
+#add_executable(mapNode src/mapNode.cpp)
+#target_link_libraries(mapNode ${catkin_LIBRARIES})
 
-add_executable(detect src/detect.cpp)
-target_link_libraries(detect ${catkin_LIBRARIES})
+#add_executable(detect src/detect.cpp)
+#target_link_libraries(detect ${catkin_LIBRARIES})
+
+add_executable(wander_node src/wander_node.cpp)
+target_link_libraries(wander_node ${catkin_LIBRARIES})
+
+add_executable(avoid_node src/avoid_node.cpp)
+target_link_libraries(avoid_node ${catkin_LIBRARIES})

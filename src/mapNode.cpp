@@ -7,10 +7,11 @@
 #define MAP_WIDTH  50
 #define MAP_HIEGHT 50
 #define UNITS_PER_CELL 0.25
+#define SCALAR_SCALE_CONSTANT 100000
 
 struct MapCell{
 	bool isWalkable = true;
-	bool wasExlored = true;
+	bool wasExplored = false;
 	float value = 0;
 	float x;
 	float y;
@@ -25,11 +26,13 @@ public:
 		for(int x = 0; x < MAP_WIDTH; x++){
 		for(int y = 0; y < MAP_HIEGHT; y++){
 			MapCell cell = cells[x][y];
-			if(!cell.wasExlored){
-				cell.value = 1;
+			if(!cell.wasExplored){
+				//cell.value = 1;
+				cells[x][y].value = 1;
 			}
 			else{
-				cell.value = 0;	
+				//cell.value = 0
+				cells[x][y].value = 0;	
 			}
 		}}
 
@@ -38,7 +41,7 @@ public:
 			for(int x = 1; x < MAP_WIDTH-1; x++){
 			for(int y = 1; y < MAP_HIEGHT-1; y++){
 				MapCell cell = cells[x][y];
-				if(!cell.wasExlored){
+				if(!cell.wasExplored){
 					cells[x][y].value = 1;
 				}
 				else if (!cell.isWalkable){
@@ -64,7 +67,7 @@ public:
 					cells[x][y].value = sum;
 					if(cells[x][y].value > 1) cells[x][y].value = 1;
 					cells[x][y].isWalkable = cell.isWalkable;
-					cells[x][y].wasExlored = cell.wasExlored;
+					cells[x][y].wasExplored = cell.wasExplored;
 				}
 			}}
 			// swap
@@ -95,17 +98,17 @@ int main(int argc, char** argv) {
 
 	uint32_t shape = visualization_msgs::Marker::POINTS;
 
-	// create temp map
-	for(int i=0; i<MAP_HIEGHT; i++){
-		//map.cells[0][i].value = 1;
-		map.cells[1][i].wasExlored = false;
-	}
-	map.cells[3][14].isWalkable = false;
-	map.cells[3][15].isWalkable = false;
+	// // create temp map
+	// for(int i=0; i<MAP_HIEGHT; i++){
+	// 	//map.cells[0][i].value = 1;
+	// 	map.cells[1][i].wasExlored = false;
+	// }
+	// map.cells[3][14].isWalkable = false;
+	// map.cells[3][15].isWalkable = false;
 
-	map.cells[3][3].isWalkable = false;
-	map.cells[3][4].isWalkable = false;
-	map.cells[3][5].isWalkable = false;
+	// map.cells[3][3].isWalkable = false;
+	// map.cells[3][4].isWalkable = false;
+	// map.cells[3][5].isWalkable = false;
 
 	map.recomputeWeights(50);
 
@@ -114,7 +117,7 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < localMapSize; ++i) {
 	    localMap[i] = new MapCell[localMapSize];
 	}
-	getLocalMap(10, 10, localMapSize, localMap);
+	getLocalMap(7, 10, localMapSize, localMap);
 
 
 	while(ros::ok()) {
@@ -167,33 +170,32 @@ int main(int argc, char** argv) {
 
 	    		std_msgs::ColorRGBA c;
 	    		c.r = c.b = c.g = map.cells[i][j].value;
-	    		if(c.r == 0) c.r = 1;
+	    		// if(c.r == 0) c.r = 1;
+	    		// if(map.cells[i][j].wasExplored){
+	    		// 	c.r = 0;
+	    		// 	c.g = 0;
+	    		// 	c.b = 1;
+	    		// }
 	    		c.a = 1.0f;
 	    		marker.colors.push_back(c);
 	    	}
 	    }
 
-	    int localX = 10 - 10/2;
-	    int localY = 10 + 10/2;
-	    int ic = 0;
-	    int jc = 0;
-	    for(int i=localX; i < localX + 10; i++){
-	    	for(int j=localY; j < localY + 10; j++){
-	    		geometry_msgs::Point p;
-	    		p.x = 0 - (MAP_WIDTH/2) + i;
-	    		p.y = 0 - MAP_HIEGHT/2 + j;
-	    		p.z = 1;
-	    		marker.points.push_back(p);
+	    // for(int i=0; i < localMapSize; i++){
+	    // 	for(int j=0; j < localMapSize; j++){
+	    // 		geometry_msgs::Point p;
+	    // 		p.x = 0 - (MAP_WIDTH/2) + i + 2;
+	    // 		p.y = 0 - (MAP_HIEGHT/2) + j + 5;
+	    // 		p.z = 3;
+	    // 		marker.points.push_back(p);
 
-	    		std_msgs::ColorRGBA c;
-	    		c.r = c.b = c.g = localMap[ic][jc].value;
-	    		if(c.r == 0) c.r = 1;
-	    		c.a = 1.0f;
-	    		marker.colors.push_back(c);
-	    		jc ++;
-	    	}
-	    	ic ++;
-	    }
+	    // 		std_msgs::ColorRGBA c;
+	    // 		c.r = c.b = c.g = localMap[i][j].value;
+	    // 		if(c.r == 0) c.r = 1;
+	    // 		c.a = 1.0f;
+	    // 		marker.colors.push_back(c);
+	    // 	}
+	    // }
 
 	    // Publish the marker
 	    while (marker_pub.getNumSubscribers() < 1)
@@ -218,25 +220,57 @@ bool sendMapData(RoboMap::mapData::Request& request,
 				 RoboMap::mapData::Response& response)
 {
 	ROS_INFO("responding tpo sendData call");
-	response.intensity = {1, 2, 3, 4, 5, 6, 7};
-	response.latitude  = 99.0f;
-	response.longitude = 33.0f;
 
+	
+
+	// // create the temp map
+	int localMapSize = 3;
+	MapCell **localMap = new MapCell*[localMapSize];
+	for(int i = 0; i < localMapSize; ++i) {
+	    localMap[i] = new MapCell[localMapSize];
+	}
+
+	// fill the map with data
+	getLocalMap((int)request.latitude, (int)request.longitude, localMapSize, localMap);
+
+	// convert to a 1D scalar array
+	std::vector<double> scalarData;
+	for(int i=0; i < localMapSize; i++){
+		for(int j=0; j < localMapSize; j++){
+
+			scalarData.push_back(localMap[i][j].value);
+		}
+	}
+	
+	response.intensity = scalarData;
+	response.latitude  = (int)request.latitude  - localMapSize/2;
+	response.longitude = (int)request.longitude - localMapSize/2;
+
+	ROS_INFO("explored: %d, %d", (int)request.latitude, (int)request.longitude);
+	map.cells[(int)request.latitude][(int)request.longitude].wasExplored = true;
+
+	map.recomputeWeights(2);
 	return true;
 }
 
 void pointCallback(const RoboMap::mapPoint::ConstPtr& message){
 	ROS_INFO("lat:%f lon:%f", message->latitude, message->longitude);
+	int x = (int) message->latitude;
+	int y = (int) message->longitude;
+
+	map.cells[x][y].isWalkable = false;
+	map.cells[x][y].wasExplored = true;
+	map.recomputeWeights(2);
 }
 
 void getLocalMap(int x, int y, int size, MapCell** localMap){
 	int topLeftX = x - size/2;
-	int topLeftY = y + size/2;
+	int topLeftY = y - size/2;
 
 	for(int i=0; i < size; i ++){
 		for(int j=0; j < size; j ++){
 			int localX = topLeftX + i;
-			int localY = topLeftY - j;
+			int localY = topLeftY + j;
 
 			localMap[i][j] = map.cells[localX][localY];
 		}

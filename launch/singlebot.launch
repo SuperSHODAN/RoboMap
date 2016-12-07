@@ -11,8 +11,8 @@
  <node name ="tf_broadcast" pkg="irobotcreate" type="tf_broadcast"/>
 
 
- <node pkg="RoboMap" type="mapNode" name="mapNode"/>
- <!--<node pkg="RoboMap" type="seek_node" name="seek_node"/>-->
+ <!--<node pkg="RoboMap" type="mapNode" name="mapNode"/>-->
+ <node pkg="RoboMap" type="seek_node" name="seek_node"/>
  <node pkg="RoboMap" type="detect" name="detect"/>
  <node pkg="RoboMap" type="arbiter_node" name="arbiter_node"/>
 
