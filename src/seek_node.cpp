@@ -36,7 +36,7 @@ double vel_i_gain = 0.015;
 double vel_d_gain = 0.05;
 double vel_power;
 
-double sample[3][3] = {{1.0, 1.4, 1.5}, {0.9, 1.1, 1.3}, {1.1, 1.5, 1.6}};
+double localMap[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
 double baseX = -1.0;
 double baseY = -1.0;
 
@@ -54,8 +54,8 @@ int main(int argc, char** argv) {
 
     ros::Publisher pub_arbiter = nh.advertise<RoboMap::behavior>("/behavior/seek", 1);
 
-    /*ros::ServiceClient client = nh.serviceClient<class_exercises::DistanceTo>("distance_to");
-    class_exercises::DistanceTo srv;*/
+    ros::ServiceClient client = nh.serviceClient<RoboMap::mapData>("mapData");
+    RoboMap::mapData srv;
 
     FindTarget();
 
@@ -118,18 +118,31 @@ void callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg) {
 
 void FindTarget () {
 
-	/*srv.request.latitude = current.x;
-    srv.request.longitude = current.y;*/
+	srv.request.latitude = current.x;
+    srv.request.longitude = current.y;
 
-	//get new map
+	if(client.call(srv)) {
+		ROS_INFO("Map received from service call.");
+		baseX = srv.response.latitude;
+		baseY = srv.response.longitude;
+		int k = 0;
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				localMap[i][j] = srv.response.intensity[k];
+				k++;
+			}
+		}
+	} else {
+		ROS_INFO("Service call to retrieve map has failed.");
+	}
 
 	double largest = 0;
 	int largestX = 0;
 	int largestY = 0;
 	for(int i = 0; i < 3; i++){
 		for(int j = 0; j < 3; j++){
-			if(sample[i][j] > largest){
-				largest = sample[i][j];
+			if(localMap[i][j] > largest){
+				largest = localMap[i][j];
 				largestX = i;
 				largestY = j;
 			}

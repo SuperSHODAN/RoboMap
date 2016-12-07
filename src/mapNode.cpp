@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "class_excercises/mapData.h"
-#include "class_excercises/mapPoint.h"
+#include "RoboMap/mapData.h"
+#include "RoboMap/mapPoint.h"
 #include "visualization_msgs/Marker.h"
 #include <vector>
 
@@ -74,9 +74,9 @@ public:
 };
 
 
-bool sendMapData(class_excercises::mapData::Request& request,
-				 class_excercises::mapData::Response& response);
-void pointCallback(const class_excercises::mapPoint::ConstPtr& message);
+bool sendMapData(RoboMap::mapData::Request& request,
+				 RoboMap::mapData::Response& response);
+void pointCallback(const RoboMap::mapPoint::ConstPtr& message);
 void getLocalMap(int x, int y, int size, MapCell** localMap);
 
 Map map;
@@ -214,8 +214,8 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-bool sendMapData(class_excercises::mapData::Request& request,
-				 class_excercises::mapData::Response& response)
+bool sendMapData(RoboMap::mapData::Request& request,
+				 RoboMap::mapData::Response& response)
 {
 	response.intensity = {1, 2, 3, 4, 5, 6, 7};
 	response.latitude  = 99.0f;
@@ -224,7 +224,7 @@ bool sendMapData(class_excercises::mapData::Request& request,
 	return true;
 }
 
-void pointCallback(const class_excercises::mapPoint::ConstPtr& message){
+void pointCallback(const RoboMap::mapPoint::ConstPtr& message){
 	ROS_INFO("lat:%f lon:%f", message->latitude, message->longitude);
 }
 

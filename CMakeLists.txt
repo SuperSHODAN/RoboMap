@@ -49,13 +49,15 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
    FILES
    behavior.msg
+   report.msg
  )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   
-# )
+ add_service_files(
+   FILES
+   mapData.srv
+   map.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -195,3 +197,9 @@ target_link_libraries(arbiter_node ${catkin_LIBRARIES})
 
 add_executable(seek_node src/seek_node.cpp)
 target_link_libraries(seek_node ${catkin_LIBRARIES})
+
+add_executable(mapNode src/mapNode.cpp)
+target_link_libraries(mapNode ${catkin_LIBRARIES})
+
+add_executable(detect src/detect.cpp)
+target_link_libraries(detect ${catkin_LIBRARIES})
