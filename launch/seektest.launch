@@ -36,6 +36,7 @@
     </group>
 
     
+
     <group ns="robot3">
      <node name="spawn_model"
         pkg="gazebo_ros"
