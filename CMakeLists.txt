@@ -190,7 +190,7 @@ include_directories(
 # catkin_add_nosetests(test)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-include_directories(./include/robotics_class)
+include_directories(./include/RoboMap)
 
 add_executable(arbiter_node src/arbiter_node.cpp)
 target_link_libraries(arbiter_node ${catkin_LIBRARIES})
